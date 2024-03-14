@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.WebSockets;
 
 namespace LinqExercise
 {
@@ -20,6 +21,50 @@ namespace LinqExercise
              * 
              */
 
+            var sum = numbers.Sum();
+            var avg = numbers.Average();
+            Console.WriteLine($"Sum: {sum}");
+            Console.WriteLine($"Average: {avg}");
+
+            var asc = numbers.OrderBy(num => num);
+            var desc = numbers.OrderByDescending(num => num);
+            Console.WriteLine("----------------------------------------");
+            Console.WriteLine("Least to greatest:");
+            foreach(var num in asc)
+            {
+                Console.WriteLine(num);
+            }
+            Console.WriteLine("----------------------------------------");
+            Console.WriteLine("Greatest to least:");
+            foreach(var num in desc)
+            {
+                Console.WriteLine(num);
+            }
+            Console.WriteLine("----------------------------------------");
+
+            Console.WriteLine("Numbers above six:");
+            var aboveSix = numbers.Where(num => num > 6);
+            foreach(var num in aboveSix)
+            {
+                Console.WriteLine(num);
+            }
+            Console.WriteLine("----------------------------------------");
+
+            Console.WriteLine("First 4 in ascending:");
+            foreach (var num in asc.Take(4))
+            {
+                Console.WriteLine(num);
+            }
+            Console.WriteLine("----------------------------------------");
+
+            Console.WriteLine("Replacing index 4 with my age, then descending:");
+            numbers[4] = 30;
+            foreach(var num in desc)
+            {
+                Console.WriteLine(num);
+            }
+            Console.WriteLine("----------------------------------------");
+
             //TODO: Print the Sum of numbers
 
             //TODO: Print the Average of numbers
@@ -36,6 +81,47 @@ namespace LinqExercise
 
             // List of employees ****Do not remove this****
             var employees = CreateEmployees();
+
+            var filter = employees.Where(person => person.FirstName.StartsWith('C') || person.FirstName.StartsWith('S'));
+            filter.OrderBy(person => person.FirstName);
+            Console.WriteLine("First names that start with C or S:");
+            
+            foreach (var employee in filter)
+            {
+                Console.WriteLine(employee.FullName);
+            }
+            Console.WriteLine("----------------------------------------------");
+
+            var ageAndName = employees.Where(person => person.Age > 26)
+                .OrderBy(person => person.Age)
+                .ThenBy(person => person.FirstName);
+            Console.WriteLine("Ordered by age over 26, then by first name:");
+            
+            foreach (var person in ageAndName)
+            {
+                Console.WriteLine($"{person.Age} {person.FullName}");
+            }
+            Console.WriteLine("--------------------------------------------------");
+
+            var experience = employees.Where(person => person.YearsOfExperience <= 10)
+                .Where(person => person.Age > 35);
+
+            var sumExperience = experience.Sum(person => person.YearsOfExperience);
+            var avgExperience = experience.Average(person => person.YearsOfExperience);
+
+            Console.WriteLine("Years of experience sum:");
+            Console.WriteLine($"{sumExperience}");
+            Console.WriteLine("Years of experience average:");
+            Console.WriteLine($"{avgExperience}");
+            Console.WriteLine("---------------------------------------------------");
+
+            Console.WriteLine("List of emplyees after adding new one:");
+            employees = employees.Append(new Employee("Eltaco", "Burrito", 207, 50 )).ToList();
+            foreach (var person in employees)
+            {
+                Console.WriteLine($"{person.FirstName} {person.LastName} {person.Age} {person.YearsOfExperience}");
+            }
+
 
             //TODO: Print all the employees' FullName properties to the console only if their FirstName starts with a C OR an S and order this in ascending order by FirstName.
 
